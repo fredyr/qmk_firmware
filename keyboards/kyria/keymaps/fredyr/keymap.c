@@ -45,6 +45,17 @@ enum layers {
 #define CMD_ENT MT(MOD_LGUI, KC_ENT)
 #define SFT_SPC MT(MOD_RSFT, KC_SPC)
 
+// Home row mods
+#define _A_  LCTL_T(KC_A)
+#define _S_  LALT_T(KC_S)
+#define _D_  LGUI_T(KC_D)
+#define _F_  LSFT_T(KC_F)
+
+#define _J_  RSFT_T(KC_J)
+#define _K_  RGUI_T(KC_K)
+#define _L_  LALT_T(KC_L)
+#define _SC_ RCTL_T(KC_SCLN)
+
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
 // produces the key `tap` when tapped (i.e. pressed and released).
@@ -60,15 +71,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * |  \ |   |   Z  |   X  |   C  |   V  |   B  | Tab  |CapsLk|  |F-keys|Backsp|   N  |   M  | ,  < | . >  | /  ? |  - _   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust| Alt  | Nav  | Shift| LGUI |  | RGUI/| Shift| Sym  | AltGr| Ctrl |
+ *                        |Adjust| Alt  | Nav  | Shift| LGUI |  | RGUI/| Shift| Sym  | Ctrl | AltGr|
  *                        |      |      |      | Esc  |      |  | Enter| Space|      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
      KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
-     CTL_ESC , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J ,  KC_K ,   KC_L ,KC_SCLN, KC_QUOT,
+     CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
      KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CAPS,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST , ALT_ENT, NAV,   SFT_ESC, KC_LGUI,     CMD_ENT, SFT_SPC, SYM, KC_RALT, KC_RCTL
+                                 ADJUST , ALT_ENT, NAV,   SFT_ESC, KC_LGUI,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
     ),
 
 /*
@@ -142,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |    ~   |  !   |  @   |  #   |  $   |  %   |                              |   ^  |  &   |  *   |  (   |  )   |   +    |
  * |--------+------+------+------+------+------+-------------.  ,------+-------------+------+------+------+------+--------|
- * |    |   |   \  |  :   |  ;   |  -   | \ |  | [ {  |      |  |      |  ] } |  # ~ |  _   |  ,   |  .   |  /   |   ?    |
+ * |    |   |   \  |  :   |  ;   |  -   |  {   |  [   |      |  |      |  ]   |   }  |  _   |  ,   |  .   |  /   |   ?    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -151,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_SYM] = LAYOUT(
       KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                       KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL ,
      KC_TILD , KC_EXLM,  KC_AT , KC_HASH,  KC_DLR, KC_PERC,                                     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS,
-     KC_PIPE , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, KC_NUBS, KC_LBRC, _______, _______, KC_RBRC, KC_NUHS, KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
+     KC_PIPE , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, S(KC_LBRC), KC_LBRC, _______, _______, KC_RBRC, S(KC_RBRC), KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
