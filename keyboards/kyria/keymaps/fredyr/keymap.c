@@ -15,6 +15,8 @@
  */
 #include QMK_KEYBOARD_H
 
+uint16_t copy_paste_timer;
+
 enum layers {
     _QWERTY = 0,
     _DVORAK,
@@ -25,6 +27,10 @@ enum layers {
     _ADJUST
 };
 
+
+enum custom_keycodes {
+    KC_CCCV = SAFE_RANGE
+};
 
 // Aliases for readability
 #define QWERTY DF(_QWERTY)
@@ -69,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Ctrl/Esc|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  ' "   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |  \ |   |   Z  |   X  |   C  |   V  |   B  | Tab  |CapsLk|  |F-keys|Backsp|   N  |   M  | ,  < | . >  | /  ? |  - _   |
+ * |  \ |   |   Z  |   X  |   C  |   V  |   B  | Tab  | CCCV |  |F-keys|Backsp|   N  |   M  | ,  < | . >  | /  ? |  - _   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Adjust| Alt  | Nav  | Shift| LGUI |  | RGUI/| Shift| Sym  | Ctrl | AltGr|
  *                        |      |      |      | Esc  |      |  | Enter| Space|      |      |      |
@@ -78,8 +84,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
      KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
      CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
-     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CAPS,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST , ALT_ENT, NAV,   SFT_ESC, KC_LGUI,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
+     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
+                                 ADJUST , ALT_ENT,  NAV,  SFT_ESC, KC_LGUI,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
     ),
 
 /*
@@ -139,10 +145,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NAV] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_VOLU, KC_DEL,
+      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_VOLU, KC_DEL,
       _______, KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_VOLD, KC_INS,
-      _______, _______, _______, _______, _______, _______, _______, KC_SLCK, _______, _______,KC_PAUSE, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_PSCR,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+      _______, _______, _______, _______, _______, _______, _______, KC_SLCK, _______, KC_DEL, KC_PAUSE, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_PSCR,
+                                 _______, _______, _______, _______, _______, _______, KC_BSPC, _______, _______, _______
     ),
 
 /*
@@ -229,6 +235,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 //     ),
 };
+
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case KC_CCCV:  // One key copy/paste
+        if (record->event.pressed) {
+            copy_paste_timer = timer_read();
+        } else {
+            if (timer_elapsed(copy_paste_timer) > TAPPING_TERM) {  // Hold, copy
+                tap_code16(LGUI(KC_C));
+            } else { // Tap, paste
+                tap_code16(LGUI(KC_V));
+            }
+        }
+        break;
+    }
+    return true;
+}
 
 
 #ifdef OLED_DRIVER_ENABLE
