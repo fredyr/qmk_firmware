@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  \ |   |   Z  |   X  |   C  |   V  |   B  | Tab  | CCCV |  |F-keys|Backsp|   N  |   M  | ,  < | . >  | /  ? |  - _   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Adjust| Alt  | Nav  | Shift| LGUI |  | RGUI/| Shift| Sym  | Ctrl | AltGr|
- *                        |      |      |      | Esc  |      |  | Enter| Space|      |      |      |
+ *                        |      |      |      | Space| Esc  |  | Enter| Space|      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
