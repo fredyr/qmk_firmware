@@ -51,6 +51,7 @@ enum custom_keycodes {
 #define SFT_ESC MT(MOD_LSFT, KC_ESC)
 #define CMD_ENT MT(MOD_LGUI, KC_ENT)
 #define SFT_SPC MT(MOD_RSFT, KC_SPC)
+#define SFT_TAB MT(MOD_LSFT, KC_TAB)
 
 // Home row mods
 #define _A_  LCTL_T(KC_A)
@@ -79,14 +80,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  \ |   |   Z  |   X  |   C  |   V  |   B  | Tab  | CCCV |  |F-keys|Backsp|   N  |   M  | ,  < | . >  | /  ? |  - _   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Adjust| Alt  | Nav  | Shift| LGUI |  | RGUI/| Shift| Sym  | Ctrl | AltGr|
- *                        |      |      |      | Space| Esc  |  | Enter| Space|      |      |      |
+ *                        |      |      |      | Tab  | Esc  |  | Enter| Space|      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
      KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
      CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
      KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST , ALT_ENT,  NAV,  SFT_SPC, CMD_ESC,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
+                                 ADJUST , ALT_ENT,  NAV,  SFT_TAB, CMD_ESC,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
     ),
 
 /*
@@ -170,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                       KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL ,
      KC_TILD , KC_EXLM,  KC_AT , KC_HASH,  KC_DLR, KC_PERC,                                     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS,
      KC_PIPE , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, S(KC_LBRC), KC_LBRC, _______, _______, KC_RBRC, S(KC_RBRC), KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+                                 _______, _______, _______, KC_BSPC, _______, _______, _______, _______, _______, _______
     ),
 
 /*
