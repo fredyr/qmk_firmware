@@ -53,6 +53,62 @@ enum custom_keycodes {
 #define SFT_SPC MT(MOD_RSFT, KC_SPC)
 #define SFT_TAB MT(MOD_LSFT, KC_TAB)
 
+// Combo definitions
+
+enum combo_events {
+    BSLSZ_UNDO,
+    ZX_REDO,
+    MCOMM_DEL_WORD,
+    COMMDOT_FDEL_WORD,
+};
+
+const uint16_t PROGMEM undo_combo[] = {KC_BSLS, KC_Z, COMBO_END};
+const uint16_t PROGMEM redo_combo[] = {KC_Z, KC_X, COMBO_END};
+const uint16_t PROGMEM dwb_combo[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM dwf_combo[] = {KC_COMM, KC_DOT, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    [BSLSZ_UNDO] = COMBO_ACTION(undo_combo),
+    [ZX_REDO] = COMBO_ACTION(redo_combo),
+    [MCOMM_DEL_WORD] = COMBO_ACTION(dwb_combo),
+    [COMMDOT_FDEL_WORD] = COMBO_ACTION(dwf_combo),
+};
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch(combo_index) {
+    case BSLSZ_UNDO:
+        if (pressed) {
+            tap_code16(LGUI(KC_Z));
+        }
+        break;
+    case ZX_REDO:
+        if (pressed) {
+            tap_code16(SGUI(KC_Z));
+        }
+        break;
+
+    case MCOMM_DEL_WORD:
+        if (pressed) {
+            tap_code16(LALT(KC_BSPC));
+        }
+        break;
+    case COMMDOT_FDEL_WORD:
+        if (pressed) {
+            tap_code16(LALT(KC_DEL));
+        }
+        break;
+    }
+}
+
+// Tap Dance declarations
+enum {
+    TD_LRBRC,
+};
+qk_tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for [, twice for ]
+    [TD_LRBRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
+};
+
 // Home row mods
 #define _A_  LCTL_T(KC_A)
 #define _S_  LALT_T(KC_S)
@@ -84,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
-     KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
+     KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , TD(TD_LRBRC),
      CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
      KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
                                  ADJUST , ALT_ENT,  NAV,  SFT_TAB, CMD_ESC,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
