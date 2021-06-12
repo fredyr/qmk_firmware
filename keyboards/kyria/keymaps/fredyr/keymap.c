@@ -53,8 +53,10 @@ enum custom_keycodes {
 #define SFT_SPC MT(MOD_RSFT, KC_SPC)
 #define SFT_TAB MT(MOD_LSFT, KC_TAB)
 
-// Combo definitions
+#define TAB_PREV SCMD(KC_LBRC)
+#define TAB_NEXT SCMD(KC_RBRC)
 
+// Combo definitions
 enum combo_events {
     BSLSZ_UNDO,
     ZX_REDO,
@@ -206,7 +208,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_VOLU, KC_DEL,
       _______, KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_VOLD, KC_INS,
       _______, _______, _______, _______, _______, _______, _______, KC_SLCK, _______, KC_DEL, KC_PAUSE, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_PSCR,
-                                 _______, _______, _______, _______, _______, _______, KC_BSPC, _______, _______, _______
+                                 _______, _______, _______, _______, _______, _______, KC_BSPC, _______, TAB_PREV, TAB_NEXT
     ),
 
 /*
