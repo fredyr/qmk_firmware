@@ -7,73 +7,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#include QMK_KEYBOARD_H
-
-uint16_t copy_paste_timer;
-
-enum layers {
-    _QWERTY = 0,
-    _DVORAK,
-    _COLEMAK_DH,
-    _NAV,
-    _SYM,
-    _FUNCTION,
-    _ADJUST
-};
-
-
-enum custom_keycodes {
-    KC_CCCV = SAFE_RANGE
-};
-
-// Aliases for readability
-#define QWERTY DF(_QWERTY)
-#define COLEMAK DF(_COLEMAK_DH)
-#define DVORAK DF(_DVORAK)
-
-#define SYM MO(_SYM)
-#define NAV MO(_NAV)
-#define FKEYS MO(_FUNCTION)
-#define ADJUST MO(_ADJUST)
-
-#define CTL_ESC MT(MOD_LCTL, KC_ESC)
-#define CMD_ESC MT(MOD_LGUI, KC_ESC)
-#define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
-#define CTL_MINS MT(MOD_RCTL, KC_MINUS)
-#define ALT_ENT MT(MOD_LALT, KC_ENT)
-
-#define SFT_ESC MT(MOD_LSFT, KC_ESC)
-#define CMD_ENT MT(MOD_LGUI, KC_ENT)
-#define SFT_SPC MT(MOD_RSFT, KC_SPC)
-#define SFT_TAB MT(MOD_LSFT, KC_TAB)
-
-#define TAB_PREV SCMD(KC_LBRC)
-#define TAB_NEXT SCMD(KC_RBRC)
-
-// Combo definitions
-enum combo_events {
-    BSLSZ_UNDO,
-    ZX_REDO,
-    MCOMM_DEL_WORD,
-    COMMDOT_FDEL_WORD,
-};
-
-const uint16_t PROGMEM undo_combo[] = {KC_BSLS, KC_Z, COMBO_END};
-const uint16_t PROGMEM redo_combo[] = {KC_Z, KC_X, COMBO_END};
-const uint16_t PROGMEM dwb_combo[] = {KC_M, KC_COMM, COMBO_END};
-const uint16_t PROGMEM dwf_combo[] = {KC_COMM, KC_DOT, COMBO_END};
-
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  Se
 combo_t key_combos[COMBO_COUNT] = {
     [BSLSZ_UNDO] = COMBO_ACTION(undo_combo),
     [ZX_REDO] = COMBO_ACTION(redo_combo),
     [MCOMM_DEL_WORD] = COMBO_ACTION(dwb_combo),
     [COMMDOT_FDEL_WORD] = COMBO_ACTION(dwf_combo),
+    [PLBRC_RBRC] = COMBO_ACTION(rbrc_combo)
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -99,17 +39,13 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             tap_code16(LALT(KC_DEL));
         }
         break;
+    case PLBRC_RBRC:
+        if (pressed) {
+            tap_code16(KC_RBRC);
+        }
+        break;
     }
 }
-
-// Tap Dance declarations
-enum {
-    TD_LRBRC,
-};
-qk_tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for [, twice for ]
-    [TD_LRBRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
-};
 
 // Home row mods
 #define _A_  LCTL_T(KC_A)
@@ -142,31 +78,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
-     KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , TD(TD_LRBRC),
+     KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
      CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
-     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
+     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B ,KC_CAPS, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
                                  ADJUST , ALT_ENT,  NAV,  SFT_TAB, CMD_ESC,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
-    ),
-
-/*
- * Base Layer: Dvorak
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |  Tab   | ' "  | , <  | . >  |   P  |   Y  |                              |   F  |   G  |   C  |   R  |   L  |  Bksp  |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |Ctrl/Esc|   A  |   O  |   E  |   U  |   I  |                              |   D  |   H  |   T  |   N  |   S  |Ctrl/- _|
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift | ; :  |   Q  |   J  |   K  |   X  | [ {  |CapsLk|  |F-keys|  ] } |   B  |   M  |   W  |   V  |   Z  | RShift |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust| LGUI | LAlt/| Space| Nav  |  | Sym  | Space| AltGr| RGUI | Menu |
- *                        |      |      | Enter|      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_DVORAK] = LAYOUT(
-     KC_TAB  ,KC_QUOTE,KC_COMM,  KC_DOT,   KC_P ,   KC_Y ,                                        KC_F,   KC_G ,  KC_C ,   KC_R ,  KC_L , KC_BSPC,
-     CTL_ESC , KC_A ,  KC_O   ,  KC_E  ,   KC_U ,   KC_I ,                                        KC_D,   KC_H ,  KC_T ,   KC_N ,  KC_S , CTL_MINS,
-     KC_LSFT ,KC_SCLN, KC_Q   ,  KC_J  ,   KC_K ,   KC_X , KC_LBRC,KC_CAPS,     FKEYS  , KC_RBRC, KC_B,   KC_M ,  KC_W ,   KC_V ,  KC_Z , KC_RSFT,
-                                 ADJUST, KC_LGUI, ALT_ENT, KC_SPC , NAV   ,     SYM    , KC_SPC ,KC_RALT, KC_RGUI, KC_APP
     ),
 
 /*
@@ -259,9 +174,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |        |      |      |QWERTY|      |      |                              |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      |      |Dvorak|      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
+ * |        |      |      |Colmak|      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |Colmak|      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
+ * |        |      |      |      |      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -269,8 +184,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ADJUST] = LAYOUT(
       _______, _______, _______, QWERTY , _______, _______,                                    _______, _______, _______, _______,  _______, _______,
-      _______, _______, _______, DVORAK , _______, _______,                                    RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI,  RGB_MOD, _______,
-      _______, _______, _______, COLEMAK, _______, _______,_______, _______, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
+      _______, _______, _______, COLEMAK, _______, _______,                                    RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI,  RGB_MOD, _______,
+      _______, _______, _______, _______, _______, _______,_______, _______, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -352,9 +267,6 @@ static void render_status(void) {
     switch (get_highest_layer(layer_state|default_layer_state)) {
         case _QWERTY:
             oled_write_P(PSTR("QWERTY\n"), false);
-            break;
-        case _DVORAK:
-            oled_write_P(PSTR("Dvorak\n"), false);
             break;
         case _COLEMAK_DH:
             oled_write_P(PSTR("Colemak-DH\n"), false);
