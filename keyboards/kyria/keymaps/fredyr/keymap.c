@@ -7,13 +7,74 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  Se
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include QMK_KEYBOARD_H
+
+uint16_t copy_paste_timer;
+
+enum layers {
+    _QWERTY = 0,
+    _COLEMAK_DH,
+    _NAV,
+    _SYM,
+    _FUNCTION,
+    _ADJUST
+};
+
+
+enum custom_keycodes {
+    KC_CCCV = SAFE_RANGE
+};
+
+// Aliases for readability
+#define QWERTY DF(_QWERTY)
+#define COLEMAK DF(_COLEMAK_DH)
+
+#define SYM MO(_SYM)
+#define NAV MO(_NAV)
+#define FKEYS MO(_FUNCTION)
+#define ADJUST MO(_ADJUST)
+
+#define CTL_ESC MT(MOD_LCTL, KC_ESC)
+#define CMD_ESC MT(MOD_LGUI, KC_ESC)
+#define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
+#define CTL_MINS MT(MOD_RCTL, KC_MINUS)
+#define ALT_ENT MT(MOD_LALT, KC_ENT)
+
+#define SFT_ESC MT(MOD_LSFT, KC_ESC)
+#define CMD_ENT MT(MOD_LGUI, KC_ENT)
+#define SFT_SPC MT(MOD_RSFT, KC_SPC)
+#define SFT_TAB MT(MOD_LSFT, KC_TAB)
+
+#define TAB_PREV SCMD(KC_LBRC)
+#define TAB_NEXT SCMD(KC_RBRC)
+
+// Combo definitions
+enum combo_events {
+    BSLSZ_UNDO,
+    ZX_REDO,
+    MCOMM_DEL_WORD,
+    COMMDOT_FDEL_WORD,
+    LBRCQUOT_RBRC,
+};
+
+const uint16_t PROGMEM undo_combo[] = {KC_BSLS, KC_Z, COMBO_END};
+const uint16_t PROGMEM redo_combo[] = {KC_Z, KC_X, COMBO_END};
+const uint16_t PROGMEM dwb_combo[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM dwf_combo[] = {KC_COMM, KC_DOT, COMBO_END};
+const uint16_t PROGMEM rbrc_combo[] = {KC_LBRC, KC_QUOTE, COMBO_END};
+
 combo_t key_combos[COMBO_COUNT] = {
     [BSLSZ_UNDO] = COMBO_ACTION(undo_combo),
     [ZX_REDO] = COMBO_ACTION(redo_combo),
     [MCOMM_DEL_WORD] = COMBO_ACTION(dwb_combo),
     [COMMDOT_FDEL_WORD] = COMBO_ACTION(dwf_combo),
-    [PLBRC_RBRC] = COMBO_ACTION(rbrc_combo)
+    [LBRCQUOT_RBRC] = COMBO_ACTION(rbrc_combo)
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -39,7 +100,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             tap_code16(LALT(KC_DEL));
         }
         break;
-    case PLBRC_RBRC:
+    case LBRCQUOT_RBRC:
         if (pressed) {
             tap_code16(KC_RBRC);
         }
