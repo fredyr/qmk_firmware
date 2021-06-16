@@ -41,7 +41,7 @@ enum custom_keycodes {
 #define ADJUST MO(_ADJUST)
 
 #define CTL_ESC MT(MOD_LCTL, KC_ESC)
-#define CMD_ESC MT(MOD_LGUI, KC_ESC)
+#define CMD_TAB MT(MOD_LGUI, KC_TAB)
 #define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
 #define CTL_MINS MT(MOD_RCTL, KC_MINUS)
 #define ALT_ENT MT(MOD_LALT, KC_ENT)
@@ -142,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_GRV  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
      CTL_ESC ,  _A_ ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,  _SC_ , KC_QUOT,
      KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B ,KC_CAPS, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST , ALT_ENT,  NAV,  SFT_TAB, CMD_ESC,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
+                                 ADJUST , ALT_ENT,  NAV,  SFT_SPC, CMD_TAB,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
     ),
 
 /*
