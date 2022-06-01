@@ -32,16 +32,29 @@ enum custom_keycodes {
 #define FKEYS MO(_FUNCTION)
 #define ADJUST MO(_ADJUST)
 
-#define CTL_ESC MT(MOD_LCTL, KC_ESC)
-#define CMD_TAB MT(MOD_LGUI, KC_TAB)
-#define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
-#define CTL_MINS MT(MOD_RCTL, KC_MINUS)
-#define ALT_ENT MT(MOD_LALT, KC_ENT)
+#define LINUX
+#ifdef LINUX
+#    define _LCTL_T LGUI_T
+#    define _RCTL_T RGUI_T
+#    define _LGUI_T LCTL_T
+#    define _RGUI_T RCTL_T
+#else
+#    define _LCTL_T LCTL_T
+#    define _RCTL_T RCTL_T
+#    define _LGUI_T LGUI_T
+#    define _RGUI_T RGUI_T
+#endif
 
-#define SFT_ESC MT(MOD_LSFT, KC_ESC)
-#define CMD_ENT MT(MOD_LGUI, KC_ENT)
-#define SFT_SPC MT(MOD_RSFT, KC_SPC)
-#define SFT_TAB MT(MOD_LSFT, KC_TAB)
+#define CTL_ESC _LCTL_T(KC_ESC)
+#define CMD_TAB _LGUI_T(KC_TAB)
+#define CTL_QUOT _RCTL_T(KC_QUOTE)
+#define CTL_MINS _RCTL_T(KC_MINUS)
+#define ALT_ENT LALT_T(KC_ENT)
+
+#define SFT_ESC LSFT_T(KC_ESC)
+#define CMD_ENT _LGUI_T(KC_ENT)
+#define SFT_SPC RSFT_T(KC_SPC)
+#define SFT_TAB LSFT_T(KC_TAB)
 
 #define TAB_PREV SCMD(KC_LBRC)
 #define TAB_NEXT SCMD(KC_RBRC)
@@ -95,31 +108,30 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 }
 
 // Home row mods
-#define _A_ LCTL_T(KC_A)
+#define _A_ _LCTL_T(KC_A)
 #define _S_ LALT_T(KC_S)
-#define _D_ LGUI_T(KC_D)
+#define _D_ _LGUI_T(KC_D)
 #define _F_ LSFT_T(KC_F)
 
 #define _J_ RSFT_T(KC_J)
-#define _K_ RGUI_T(KC_K)
+#define _K_ _RGUI_T(KC_K)
 #define _L_ LALT_T(KC_L)
-#define _SC_ RCTL_T(KC_SCLN)
+#define _SC_ _RCTL_T(KC_SCLN)
 
 // Colemak homerow keys
-#define _cA_ LCTL_T(KC_A)
+#define _cA_ _LCTL_T(KC_A)
 #define _cR_ LALT_T(KC_R)
-#define _cS_ LGUI_T(KC_S)
+#define _cS_ _LGUI_T(KC_S)
 #define _cT_ LSFT_T(KC_T)
 
 #define _cN_ RSFT_T(KC_N)
-#define _cE_ RGUI_T(KC_E)
+#define _cE_ _RGUI_T(KC_E)
 #define _cI_ LALT_T(KC_I)
-#define _cO_ RCTL_T(KC_O)
+#define _cO_ _RCTL_T(KC_O)
 
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
 // produces the key `tap` when tapped (i.e. pressed and released).
-
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -181,7 +193,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NAV] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_VOLU, KC_DELETE,
-      _______, KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_VOLD, KC_INSERT,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_VOLD, KC_INSERT,
       _______, _______, _______, _______, _______, _______, _______, KC_SLCK, _______, KC_DEL,  KC_PAUSE,KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_PSCR,
                                  _______, _______, _______, _______, _______, _______, KC_BSPC, _______, TAB_PREV, TAB_NEXT
     ),
@@ -279,9 +291,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 copy_paste_timer = timer_read();
             } else {
                 if (timer_elapsed(copy_paste_timer) > TAPPING_TERM) {  // Hold, copy
-                    tap_code16(LGUI(KC_C));
+                    tap_code16(LCTL(KC_C));
                 } else {  // Tap, paste
-                    tap_code16(LGUI(KC_V));
+                    tap_code16(LCTL(KC_V));
                 }
             }
             break;
