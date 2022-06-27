@@ -19,9 +19,7 @@ uint16_t copy_paste_timer;
 
 enum layers { _QWERTY = 0, _COLEMAK_DH, _NAV, _SYM, _FUNCTION, _ADJUST };
 
-enum custom_keycodes {
-    KC_CCCV = SAFE_RANGE,
-};
+enum custom_keycodes { KC_CCCV = SAFE_RANGE, KC_LEAD };
 
 // Aliases for readability
 #define QWERTY DF(_QWERTY)
@@ -49,7 +47,7 @@ enum custom_keycodes {
 #define CMD_TAB _LGUI_T(KC_TAB)
 #define CTL_QUOT _RCTL_T(KC_QUOTE)
 #define CTL_MINS _RCTL_T(KC_MINUS)
-#define ALT_ENT LALT_T(KC_ENT)
+#define GUI_ENT LGUI_T(KC_ENT)
 
 #define SFT_ESC LSFT_T(KC_ESC)
 #define CMD_ENT _LGUI_T(KC_ENT)
@@ -153,7 +151,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_LBRC,
      CTL_ESC , KC_A ,   _S_   ,   _D_  ,    _F_ ,   KC_G ,                                        KC_H,    _J_ ,   _K_ ,    _L_ ,KC_SCLN, KC_QUOT,
      KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B ,KC_CAPS, KC_CCCV,     FKEYS,   KC_BSPC, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST , ALT_ENT,  NAV,  SFT_SPC, CMD_TAB,     CMD_ENT, SFT_SPC, SYM,  KC_RCTL, KC_RALT
+                                 ADJUST , GUI_ENT,  NAV,  SFT_SPC, KC_LEAD,     CMD_ENT, SFT_SPC, SYM,  KC_RGUI, KC_RALT
     ),
 /*
  * Base Layer: Colemak DH
@@ -171,9 +169,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_COLEMAK_DH] = LAYOUT(
      KC_TAB  , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, KC_LBRC,
-     CTL_ESC , KC_A,  _cR_   ,  _cS_  ,   _cT_ ,   KC_G ,                                        KC_M,   _cN_ ,  _cE_ ,   _cI_ ,  KC_O  , CTL_QUOT,
-     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_D ,   KC_V , KC_CAPS, KC_CCCV,    FKEYS  , KC_RBRC, KC_K,   KC_H ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
-                                 ADJUST, ALT_ENT,   NAV,  SFT_SPC , CMD_TAB,    CMD_ENT, SFT_SPC ,SYM, KC_RCTL, KC_RALT
+     CTL_ESC , KC_A,  _cR_   ,  _cS_  ,   _cT_ ,   KC_G ,                                         KC_M,   _cN_ ,  _cE_ ,   _cI_ ,  KC_O , CTL_QUOT,
+     KC_BSLS , KC_Z ,  KC_X   ,  KC_C  ,   KC_D ,   KC_V , KC_CAPS, KC_CCCV,    FKEYS  , KC_BSPC, KC_K,   KC_H ,KC_COMM, KC_DOT ,KC_SLSH, KC_MINS,
+                                 ADJUST, GUI_ENT,   NAV,  SFT_SPC , KC_LEAD,    CMD_ENT, SFT_SPC ,SYM, KC_RCTL, KC_RALT
     ),
 
 
@@ -295,6 +293,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {  // Tap, paste
                     tap_code16(LCTL(KC_V));
                 }
+            }
+            break;
+        case KC_LEAD:  // localleader
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_SPC) SS_DELAY(10) SS_TAP(X_M));
             }
             break;
     }
